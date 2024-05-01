@@ -88,7 +88,7 @@ const logger = winston.createLogger({
 logger.stream = {
   // @ts-ignore
   write: function (message, _encoding) {
-    logger.http(message);
+    logger.http(message.substring(0, message.lastIndexOf("\n")));
   },
 };
 
