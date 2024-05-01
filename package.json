@@ -2,10 +2,10 @@
   "name": "bcc-server",
   "version": "0.1.0",
   "description": "server side of bcc web",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node src/app.js"
+    "dev": "ts-node-dev --respawn --transpile-only --quiet --rs src/app.ts"
   },
   "author": "BAIUST Computer Club",
   "license": "Unlicense",
@@ -13,6 +13,7 @@
     "@types/node": "^20.12.7",
     "prisma": "^5.13.0",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
