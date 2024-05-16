@@ -3,6 +3,6 @@ import { handleSignIn } from "../../controllers/auth.controller";
 
 const authRouter = express.Router();
 
-authRouter.get("/signin", handleSignIn);
+authRouter.post("/signin", handleSignIn);
 
 export default authRouter;
