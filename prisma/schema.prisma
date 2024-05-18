@@ -14,15 +14,15 @@ datasource db {
 }
 
 model User {
-  id           Int          @id @default(autoincrement())
-  createdAt    DateTime     @default(now())
-  email        String       @unique
-  username     String       @unique
-  displayName  String?
-  passwordHash String
-  role         Role         @default(USER)
-  userProfile  UserProfile?
-  memberInfo   MemberInfo?
+  id             Int             @id @default(autoincrement())
+  createdAt      DateTime        @default(now())
+  email          String          @unique
+  username       String          @unique
+  displayName    String?
+  passwordHash   String
+  role           Role            @default(USER)
+  userProfile    UserProfile?
+  clubMemberInfo ClubMemberInfo?
 }
 
 model UserProfile {
@@ -54,7 +54,7 @@ enum SocialLinkHost {
   UNKNOWN
 }
 
-model MemberInfo {
+model ClubMemberInfo {
   memberId    Int        @unique
   designation MemberRole @default(MEMBER)
   tenureStart DateTime
