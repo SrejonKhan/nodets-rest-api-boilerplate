@@ -14,14 +14,44 @@ datasource db {
 }
 
 model User {
-  id           Int         @id @default(autoincrement())
-  createdAt    DateTime    @default(now())
-  email        String      @unique
-  username     String      @unique
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime     @default(now())
+  email        String       @unique
+  username     String       @unique
   displayName  String?
   passwordHash String
-  role         Role        @default(USER)
+  role         Role         @default(USER)
+  userProfile  UserProfile?
   memberInfo   MemberInfo?
+}
+
+model UserProfile {
+  profileIntro String?
+  designation  String?
+  avatarUrl    String?
+  socialLinks  SocialLink[]
+  tenureStart  DateTime
+  tenureEnd    DateTime
+  clubGoals    String?
+  user         User         @relation(fields: [userId], references: [id])
+  userId       Int          @unique
+}
+
+model SocialLink {
+  url         String
+  host        SocialLinkHost @default(UNKNOWN)
+  userProfile UserProfile    @relation(fields: [userId], references: [userId])
+  userId      Int            @unique
+}
+
+enum SocialLinkHost {
+  LINKEDIN
+  GITHUB
+  FACEBOOK
+  INSTAGRAM
+  MAIL
+  TWITTER
+  UNKNOWN
 }
 
 model MemberInfo {
