@@ -14,13 +14,14 @@ datasource db {
 }
 
 model User {
-  id                 Int         @id @default(autoincrement())
-  createdAt          DateTime    @default(now())
-  email              String      @unique
-  name               String?
-  passwordHash       String
-  role               Role        @default(USER)
-  memberInfo         MemberInfo?
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  email        String      @unique
+  username     String      @unique
+  displayName  String?
+  passwordHash String
+  role         Role        @default(USER)
+  memberInfo   MemberInfo?
 }
 
 model MemberInfo {
@@ -29,8 +30,8 @@ model MemberInfo {
   tenureStart DateTime
   tenureEnd   DateTime
   clubGoals   String?
-  user        User @relation(fields: [userId], references: [id])
-  userId Int @unique
+  user        User       @relation(fields: [userId], references: [id])
+  userId      Int        @unique
 }
 
 enum MemberRole {
