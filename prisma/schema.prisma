@@ -14,12 +14,40 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
-  email        String   @unique
-  name         String?
-  passwordHash String
-  role         Role     @default(USER)
+  id                 Int         @id @default(autoincrement())
+  createdAt          DateTime    @default(now())
+  email              String      @unique
+  name               String?
+  passwordHash       String
+  role               Role        @default(USER)
+  memberInfo         MemberInfo?
+}
+
+model MemberInfo {
+  memberId    Int        @unique
+  designation MemberRole @default(MEMBER)
+  tenureStart DateTime
+  tenureEnd   DateTime
+  clubGoals   String?
+  user        User @relation(fields: [userId], references: [id])
+  userId Int @unique
+}
+
+enum MemberRole {
+  PRESIDENT
+  GENERAL_SECRETARY
+  VP_TECHNICAL
+  VP_ORGANIZING
+  VP_PUBLIC_RELATION
+  TREASURER
+  JOINT_SECRETARY
+  ASSISTANT_SECRETARY_TECHNICAL
+  ASSISTANT_SECRETARY_ORGANIZING
+  ASSISTANT_SECRETARY_PUBLIC_RELATION
+  ASSISTANT_SECRETARY_BRAND_MANAGEMENT
+  ASSISTANT_TREASURER
+  EXECUTIVE_MEMBER
+  MEMBER
 }
 
 enum Role {
