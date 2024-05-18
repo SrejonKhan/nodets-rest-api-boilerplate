@@ -25,6 +25,13 @@ model User {
   clubMemberInfo ClubMemberInfo?
 }
 
+enum Role {
+  USER
+  ADMIN
+  FACULTY
+  MEMBER
+}
+
 model UserProfile {
   profileIntro String?
   designation  String?
@@ -78,12 +85,5 @@ enum MemberRole {
   ASSISTANT_SECRETARY_BRAND_MANAGEMENT
   ASSISTANT_TREASURER
   EXECUTIVE_MEMBER
-  MEMBER
-}
-
-enum Role {
-  USER
-  ADMIN
-  FACULTY
   MEMBER
 }
