@@ -26,4 +26,5 @@ enum Role {
   USER
   ADMIN
   FACULTY
+  MEMBER
 }
