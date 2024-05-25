@@ -13,5 +13,5 @@ export const signUpSchema = z.object({
     message: "Password must be at least 6 characters",
   }),
   username: z.string().min(3, { message: "Username must be 3 or more characters long." }),
-  displayName: z.string().min(3, { message: "Display Name must be 3 or more characters long." }),
+  displayName: z.string().min(3, { message: "Display Name must be 3 or more characters long." }).optional(),
 });
