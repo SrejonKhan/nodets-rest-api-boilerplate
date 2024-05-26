@@ -5,7 +5,7 @@ import httpStatus from "http-status";
 import config from "./config/base";
 import logger from "./utils/logger";
 import morgan from "morgan";
-import authRouter from "./routers/v1/auth";
+import authRouter from "./routers/v1/auth.router";
 import { globalErrorHandler, notFoundHandler } from "./middlewares/error.middleware";
 
 const server = express();
