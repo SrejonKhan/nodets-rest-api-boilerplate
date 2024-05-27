@@ -23,6 +23,7 @@
   "dependencies": {
     "@prisma/client": "^5.13.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/swagger-ui-express": "^4.1.6",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -31,7 +32,9 @@
     "http-status": "^1.7.4",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "swagger-ui-express": "^5.0.0",
     "winston": "^3.13.0",
+    "yaml": "^2.4.2",
     "zod": "^3.23.5",
     "zod-validation-error": "^3.3.0"
   }
