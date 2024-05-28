@@ -19,7 +19,16 @@ const handleUserSignIn = async (email: string, password: string) => {
     throw createApiError(401, "Invalid Password!");
   }
 
-  return user;
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
+
+  return {
+    user: excludeFromObject(user, ["passwordHash"]),
+    token: {
+      accessToken,
+      refreshToken,
+    },
+  };
 };
 
 const handleUserSignUp = async (email: string, password: string, username: string, displayName: string) => {

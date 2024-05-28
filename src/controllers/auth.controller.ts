@@ -8,9 +8,9 @@ const handleSignIn = async (req, res, next) => {
   try {
     const payload = signInSchema.parse(req.body);
     const { email, password } = payload;
-    const user = await handleUserSignIn(email, password);
-    logger.info(`UserID ${user.id} signed in.`);
-    res.status(httpStatus.OK).send(user);
+    const body = await handleUserSignIn(email, password);
+    logger.info(`UserID ${body.user.id} signed in.`);
+    res.status(httpStatus.OK).send(body);
   } catch (ex) {
     next(ex);
   }
