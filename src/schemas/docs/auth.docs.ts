@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { signInSchema, signUpSchema } from "../auth.schema";
 import { registry } from "./generator";
 
