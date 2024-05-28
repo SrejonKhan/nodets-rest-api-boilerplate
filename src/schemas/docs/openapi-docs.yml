@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  version: 0.1.0
+  title: BCC Server API
+  description: API for BCC Site and Dashboard
+servers:
+  - url: /api/v1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas: {}
+  parameters: {}
+paths:
+  /auth/signin:
+    post:
+      summary: Email-Pass SignIn
+      description: Email-Pass SignIn, successfull respond with user data and token data.
+      security: []
+      tags:
+        - Authentication
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - schema:
+            type: string
+            format: email
+          required: true
+          name: email
+          in: path
+        - schema:
+            type: string
+            minLength: 6
+          required: true
+          name: password
+          in: path
+      responses:
+        "200":
+          description: Object with user data and token data.
+  /auth/signup:
+    post:
+      summary: Email-Pass SignUp
+      description: Email-Pass SignUp, successfull respond with user data and token
+        data to authenticate on the go.
+      security: []
+      tags:
+        - Authentication
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - schema:
+            type: string
+            format: email
+          required: true
+          name: email
+          in: path
+        - schema:
+            type: string
+            minLength: 6
+          required: true
+          name: password
+          in: path
+        - schema:
+            type: string
+            minLength: 3
+          required: true
+          name: username
+          in: path
+        - schema:
+            type: string
+            minLength: 3
+          required: false
+          name: displayName
+          in: path
+      responses:
+        "200":
+          description: Object with user data and token data.
