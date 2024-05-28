@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { signInSchema, signUpSchema } from "../auth.schema";
 import { registry } from "./generator";
 
@@ -11,7 +12,11 @@ registry.registerPath({
   consumes: ["application/json"],
   produces: ["application/json"],
   request: {
-    params: signInSchema,
+    body: {
+      content: {
+        "application/json": { schema: signInSchema },
+      },
+    },
   },
   responses: {
     200: {
@@ -30,7 +35,11 @@ registry.registerPath({
   consumes: ["application/json"],
   produces: ["application/json"],
   request: {
-    params: signUpSchema,
+    body: {
+      content: {
+        "application/json": { schema: signUpSchema },
+      },
+    },
   },
   responses: {
     200: {

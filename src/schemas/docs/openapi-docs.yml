@@ -25,19 +25,21 @@ paths:
         - application/json
       produces:
         - application/json
-      parameters:
-        - schema:
-            type: string
-            format: email
-          required: true
-          name: email
-          in: path
-        - schema:
-            type: string
-            minLength: 6
-          required: true
-          name: password
-          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+              required:
+                - email
+                - password
       responses:
         "200":
           description: Object with user data and token data.
@@ -53,31 +55,29 @@ paths:
         - application/json
       produces:
         - application/json
-      parameters:
-        - schema:
-            type: string
-            format: email
-          required: true
-          name: email
-          in: path
-        - schema:
-            type: string
-            minLength: 6
-          required: true
-          name: password
-          in: path
-        - schema:
-            type: string
-            minLength: 3
-          required: true
-          name: username
-          in: path
-        - schema:
-            type: string
-            minLength: 3
-          required: false
-          name: displayName
-          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+                username:
+                  type: string
+                  minLength: 3
+                displayName:
+                  type: string
+                  minLength: 3
+              required:
+                - email
+                - password
+                - username
+              description: Email-Pass Signup payload Schema
       responses:
         "200":
           description: Object with user data and token data.
