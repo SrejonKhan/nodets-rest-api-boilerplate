@@ -84,4 +84,16 @@ const generateRefreshToken = (user: User) => {
   return jwt.sign(payload, config.RSA_PRIVATE_KEY, { algorithm: "RS256", expiresIn: 60 * 60 });
 };
 
-export { handleUserSignIn, handleUserSignUp };
+const findUserByEmail = async (email: string) => {
+  return await prisma.user.findUnique({
+    where: { email: email },
+  });
+};
+
+const findUserByUsername = async (username: string) => {
+  return await prisma.user.findUnique({
+    where: { username: username },
+  });
+};
+
+export { handleUserSignIn, handleUserSignUp, findUserByEmail, findUserByUsername };
