@@ -1,5 +1,5 @@
 import { signInSchema, signUpSchema } from "../auth.schema";
-import { registry } from "./generator";
+import { bearerAuth, registry } from "./generator";
 
 registry.registerPath({
   method: "post",
@@ -40,6 +40,23 @@ registry.registerPath({
       },
     },
   },
+  responses: {
+    200: {
+      description: "Object with user data and token data.",
+    },
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/auth/whoami",
+  summary: "Identify currently signed in user",
+  description: "Identify using token from header.",
+  security: [{ [bearerAuth.name]: [] }],
+  tags: ["Authentication"],
+  consumes: ["application/json"],
+  produces: ["application/json"],
+  request: {},
   responses: {
     200: {
       description: "Object with user data and token data.",

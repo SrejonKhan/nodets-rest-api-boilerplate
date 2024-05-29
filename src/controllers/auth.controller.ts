@@ -1,8 +1,9 @@
 import httpStatus from "http-status";
 import { signInSchema, signUpSchema } from "../schemas/auth.schema";
-import { handleUserSignIn, handleUserSignUp } from "../services/auth.service";
+import { findUserByEmail, handleUserSignIn, handleUserSignUp } from "../services/auth.service";
 import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
+import { excludeFromObject } from "../utils/object";
 
 const handleSignIn = async (req, res, next) => {
   try {
@@ -27,4 +28,15 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
     next(ex);
   }
 };
-export { handleSignIn, signUp };
+
+const whoami = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await findUserByEmail(req.user.email);
+    const refinedUser = excludeFromObject(user, ["passwordHash"]);
+    res.status(httpStatus.OK).send(refinedUser);
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+export { handleSignIn, signUp, whoami };

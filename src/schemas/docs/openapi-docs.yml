@@ -81,3 +81,18 @@ paths:
       responses:
         "200":
           description: Object with user data and token data.
+  /auth/whoami:
+    get:
+      summary: Identify currently signed in user
+      description: Identify using token from header.
+      security:
+        - bearerAuth: []
+      tags:
+        - Authentication
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Object with user data and token data.
