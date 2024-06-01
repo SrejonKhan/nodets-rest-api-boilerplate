@@ -11,10 +11,8 @@ extendZodWithOpenApi(z);
 import authRouter from "./routers/v1/auth.router";
 import { globalErrorHandler, notFoundHandler } from "./middlewares/error.middleware";
 import docsRouter from "./routers/v1/docs.router";
-import { writeOpenApiDocumentation } from "./schemas/docs/generator";
 
 const server = express();
-writeOpenApiDocumentation();
 
 /*-------------------MIDDLEWARES-------------------*/
 server.use(helmet());

@@ -2,6 +2,10 @@ import fs from "fs";
 import path from "path";
 import yaml from "yaml";
 import { OpenApiGeneratorV3, OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
+import { z } from "zod";
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+
+extendZodWithOpenApi(z);
 
 export const registry = new OpenAPIRegistry();
 
@@ -19,7 +23,7 @@ const importAllSchemas = async () => {
   });
 };
 
-export const writeOpenApiDocumentation = async () => {
+(async () => {
   await importAllSchemas();
 
   const generator = new OpenApiGeneratorV3(registry.definitions);
@@ -38,4 +42,4 @@ export const writeOpenApiDocumentation = async () => {
   fs.writeFileSync(`${__dirname}/openapi-docs.yml`, fileContent, {
     encoding: "utf-8",
   });
-};
+})();

@@ -21,10 +21,6 @@ paths:
       security: []
       tags:
         - Authentication
-      consumes:
-        - application/json
-      produces:
-        - application/json
       requestBody:
         content:
           application/json:
@@ -51,10 +47,6 @@ paths:
       security: []
       tags:
         - Authentication
-      consumes:
-        - application/json
-      produces:
-        - application/json
       requestBody:
         content:
           application/json:
@@ -89,10 +81,6 @@ paths:
         - bearerAuth: []
       tags:
         - Authentication
-      consumes:
-        - application/json
-      produces:
-        - application/json
       responses:
         "200":
           description: Object with user data and token data.

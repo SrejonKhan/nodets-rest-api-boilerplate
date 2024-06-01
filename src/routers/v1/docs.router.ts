@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 
 // reading docs yml file
-const file = fs.readFileSync(path.join(__dirname, "../../schemas/docs/openapi-docs.yml"), "utf8");
+const file = fs.readFileSync(path.join(__dirname, "../../../docs/api/openapi-docs.yml"), "utf8");
 const swaggerDocument = yaml.parse(file);
 
 // setup express router
