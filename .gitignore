@@ -132,3 +132,6 @@ dist
 # db files
 db
 *.sqlite
+
+# docs file
+docs/api/openapi-docs.yml
