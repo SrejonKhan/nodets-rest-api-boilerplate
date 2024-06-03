@@ -1,8 +1,10 @@
 version: "3.8"
+name: bcc-server
 
 services:
   # App Service
   app:
+    container_name: bcc-server-app
     build:
       context: ..
       dockerfile: docker/dev.Dockerfile
@@ -15,13 +17,14 @@ services:
       - /home/node/app/docker
       - /home/node/app/docs
     links:
-      - psql
+      - postgres
     depends_on:
-      psql:
+      postgres:
         condition: service_healthy
 
   # PostgreSQL
-  psql:
+  postgres:
+    container_name: bcc-server-postgres
     image: postgres:16-alpine
     ports:
       - 5432:5432
@@ -39,6 +42,7 @@ services:
 
   # Swagger UI
   swagger-ui:
+    container_name: bcc-server-swagger-ui
     image: swaggerapi/swagger-ui:latest
     hostname: swagger-ui
     ports:
