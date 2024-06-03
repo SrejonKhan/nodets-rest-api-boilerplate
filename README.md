@@ -1,3 +1,13 @@
+## Services
+
+Available service(s) when ran with `npm run docker:dev`:
+
+| Service       | Port | URL                          |
+| ------------- | ---- | ---------------------------- |
+| API V1        | 2222 | http://localhost:2222/api/v1 |
+| Swagger       | 8080 | http://localhost:8080        |
+| Prisma Studio | 5555 | http://localhost:5555        |
+
 ## Commands
 
 `npm run dev`: Run the App for developement environment, Postgres must be running on port 5432 beforehand. Otherwise, it will fail.
