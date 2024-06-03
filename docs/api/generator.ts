@@ -34,9 +34,12 @@ const importAllSchemas = async () => {
       title: "BCC Server API",
       description: "API for BCC Site and Dashboard",
     },
-    servers: [{ url: "/api/v1" }],
+    servers: [
+      {
+        url: `${process.env.SERVICE_HOST ?? ""}/api/v1`,
+      },
+    ],
   });
-
   const fileContent = yaml.stringify(docs);
 
   fs.writeFileSync(`${__dirname}/openapi-docs.yml`, fileContent, {
