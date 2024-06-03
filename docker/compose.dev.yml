@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  # App Service
+  app:
+    build:
+      context: ..
+      dockerfile: docker/dev.Dockerfile
+    ports:
+      - 2222:2222
+    volumes:
+      - ..:/home/node/app
+      - /home/node/app/node_modules
+      - /home/node/app/prisma
+      - /home/node/app/docker
+      - /home/node/app/docs
+    links:
+      - psql
+    depends_on:
+      psql:
+        condition: service_healthy
+
+  # PostgreSQL
+  psql:
+    image: postgres:16-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=strongpassword
+      - POSTGRES_DB=mydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Swagger UI
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    hostname: swagger-ui
+    ports:
+      - 8080:8080
+    volumes:
+      - ../docs/api:/docs
+    environment:
+      - SWAGGER_JSON=/docs/openapi-docs.yml
+
+volumes:
+  pgdata:
