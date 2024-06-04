@@ -46,8 +46,12 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
 const whoami = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await findUserByEmail(req.user.email);
-    const refinedUser = excludeFromObject(user, ["passwordHash"]);
-    res.status(httpStatus.OK).send(refinedUser);
+
+    const body = {
+      message: "You are somebody and you are really precious to us!",
+      user: excludeFromObject(user, ["passwordHash"]),
+    };
+    res.status(httpStatus.OK).send(body);
   } catch (ex) {
     next(ex);
   }
