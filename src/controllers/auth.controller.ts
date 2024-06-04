@@ -5,7 +5,7 @@ import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { excludeFromObject } from "../utils/object";
 
-const handleSignIn = async (req, res, next) => {
+const signIn = async (req, res, next) => {
   try {
     const payload = signInSchema.parse(req.body);
     const { email, password } = payload;
@@ -39,4 +39,4 @@ const whoami = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { handleSignIn, signUp, whoami };
+export { signIn, signUp, whoami };
