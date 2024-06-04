@@ -20,4 +20,27 @@ const signUpSchema = z
     description: "Email-Pass Signup payload Schema",
   });
 
-export { signInSchema, signUpSchema };
+const forgetPasswordSchema = z
+  .object({
+    email: z.string().email().optional(),
+    username: z.string().min(3).optional(),
+  })
+  .and(
+    z.union(
+      [
+        z.object({ email: z.undefined(), username: z.string().min(3) }),
+        z.object({ email: z.string().email(), username: z.undefined() }),
+        z.object({ email: z.string().email(), username: z.string().min(3) }),
+      ],
+      {
+        errorMap: (issue, ctx) => ({
+          message: "Either email or username must be filled in.",
+        }),
+      }
+    )
+  )
+  .openapi({
+    description: "ForgetPassword payload Schema",
+  });
+
+export { signInSchema, signUpSchema, forgetPasswordSchema };

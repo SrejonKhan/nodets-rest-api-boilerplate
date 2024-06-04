@@ -5,6 +5,7 @@ import config from "../config/base";
 import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
 import { excludeFromObject } from "../utils/object";
+import { maskEmailAddress } from "../utils/string";
 
 const handleUserSignIn = async (email: string, password: string) => {
   const user = await prisma.user.findUnique({
@@ -96,4 +97,19 @@ const findUserByUsername = async (username: string) => {
   });
 };
 
-export { handleUserSignIn, handleUserSignUp, findUserByEmail, findUserByUsername };
+const handleForgetPassword = async (email: string, username: string) => {
+  const user = await prisma.user.findFirst({
+    where: { OR: [{ email: email }, { username: username }] },
+  });
+
+  if (!user) {
+    throw createApiError(400, "User doesn't exist with the provided email/username!");
+  }
+
+  // send a mail to
+  user.email;
+
+  return { maskedEmail: maskEmailAddress(user.email) };
+};
+
+export { handleUserSignIn, handleUserSignUp, findUserByEmail, findUserByUsername, handleForgetPassword };

@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
-import { signInSchema, signUpSchema } from "../schemas/auth.schema";
-import { findUserByEmail, handleUserSignIn, handleUserSignUp } from "../services/auth.service";
+import { forgetPasswordSchema, signInSchema, signUpSchema } from "../schemas/auth.schema";
+import { findUserByEmail, handleForgetPassword, handleUserSignIn, handleUserSignUp } from "../services/auth.service";
 import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { excludeFromObject } from "../utils/object";
@@ -39,4 +39,24 @@ const whoami = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { signIn, signUp, whoami };
+const forgetPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const payload = forgetPasswordSchema.parse(req.body);
+    const { email, username } = payload;
+
+    const { maskedEmail } = await handleForgetPassword(email, username);
+
+    logger.info(`Forget Password requrested for ${maskedEmail}.`);
+
+    const body = {
+      message: "Successfully sent Forget Password Link to registered email address.",
+      maskedEmail,
+    };
+
+    res.status(httpStatus.OK).send(body);
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+export { signIn, signUp, whoami, forgetPassword };
