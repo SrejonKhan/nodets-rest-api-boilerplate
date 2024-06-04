@@ -73,14 +73,17 @@ const handleUserSignUp = async (email: string, password: string, username: strin
 };
 
 const generateAccessToken = (user: User) => {
-  const payload = excludeFromObject(user, ["passwordHash"]);
+  const payload: Token = {
+    type: TokenType.refreshToken,
+    user: excludeFromObject(user, ["passwordHash"]),
+  };
   return jwt.sign(payload, config.RSA_PRIVATE_KEY, { algorithm: "RS256", expiresIn: 60 * 60 });
 };
 
 const generateRefreshToken = (user: User) => {
-  const payload = {
-    email: user.email,
-    username: user.username,
+  const payload: Token = {
+    type: TokenType.refreshToken,
+    user: excludeFromObject(user, ["passwordHash"]),
   };
   return jwt.sign(payload, config.RSA_PRIVATE_KEY, { algorithm: "RS256", expiresIn: 60 * 60 });
 };
