@@ -28,8 +28,15 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = signUpSchema.parse(req.body);
     const { email, password, username, displayName } = payload;
-    const body = await handleUserSignUp(email, password, username, displayName);
-    logger.info(`New user created. UserID: ${body.user.id}.`);
+    const { user, token } = await handleUserSignUp(email, password, username, displayName);
+
+    logger.info(`New user created. UserID: ${user.id}.`);
+
+    const body = {
+      message: "Successfully signed up!",
+      user,
+      token,
+    };
     res.status(httpStatus.OK).send(body);
   } catch (ex) {
     next(ex);
