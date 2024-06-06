@@ -43,4 +43,13 @@ const forgetPasswordSchema = z
     description: "ForgetPassword payload Schema",
   });
 
-export { signInSchema, signUpSchema, forgetPasswordSchema };
+const refreshAccessTokenSchema = z
+  .object({
+    grantType: z.enum(["refresh_token"]),
+    refreshToken: z.string(),
+  })
+  .openapi({
+    description: "Token Refresh payload Schema",
+  });
+
+export { signInSchema, signUpSchema, forgetPasswordSchema, refreshAccessTokenSchema };

@@ -1,3 +1,4 @@
+// slimmest version of User type for JWT Payload
 interface JwtUser {
   id: User["id"];
   email: User["email"];
@@ -11,7 +12,7 @@ enum TokenType {
   accessToken = "ACCESS_TOKEN",
 }
 
-interface Token {
+interface TokenPayload {
   type: TokenType;
-  user: JwtUser;
+  jwtUser: JwtUser;
 }

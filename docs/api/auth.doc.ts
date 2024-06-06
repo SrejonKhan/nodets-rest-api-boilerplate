@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { forgetPasswordSchema, signInSchema, signUpSchema } from "../../src/schemas/auth.schema";
+import { forgetPasswordSchema, refreshAccessTokenSchema, signInSchema, signUpSchema } from "../../src/schemas/auth.schema";
 import { bearerAuth, registry } from "./generator";
 
 registry.registerPath({
@@ -81,6 +81,29 @@ registry.registerPath({
   responses: {
     200: {
       description: "Object with masked email.",
+    },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/auth/refresh",
+  summary: "Get a new Access Token exchanging a valid Refresh Token.",
+  description: `A valid Refresh Token must be provided. 
+    If user's critical info is changed after the provided Refresh Token is issued,
+    the Refresh Token will be taken as invalidated, so Reauthentication is required.`,
+  security: [],
+  tags: ["Authentication"],
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: refreshAccessTokenSchema },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Object with a message and new access token.",
     },
   },
 });

@@ -1,6 +1,12 @@
 import httpStatus from "http-status";
-import { forgetPasswordSchema, signInSchema, signUpSchema } from "../schemas/auth.schema";
-import { findUserByEmail, handleForgetPassword, handleUserSignIn, handleUserSignUp } from "../services/auth.service";
+import { forgetPasswordSchema, refreshAccessTokenSchema, signInSchema, signUpSchema } from "../schemas/auth.schema";
+import {
+  exchangeAccessToken,
+  findUserByEmail,
+  handleForgetPassword,
+  handleUserSignIn,
+  handleUserSignUp,
+} from "../services/auth.service";
 import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { excludeFromObject } from "../utils/object";
@@ -77,4 +83,22 @@ const forgetPassword = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export { signIn, signUp, whoami, forgetPassword };
+const refreshAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const payload = refreshAccessTokenSchema.parse(req.body);
+    const { grantType, refreshToken } = payload;
+
+    let accessToken = exchangeAccessToken(grantType, refreshToken);
+
+    const body = {
+      message: "Successfully exchanged token. New Access Token granted.",
+      accessToken,
+    };
+
+    res.status(httpStatus.OK).send(body);
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+export { signIn, signUp, whoami, forgetPassword, refreshAccessToken };

@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
 import { excludeFromObject } from "../utils/object";
 import { maskEmailAddress } from "../utils/string";
+import httpStatus from "http-status";
 
 const handleUserSignIn = async (email: string, password: string) => {
   const user = await prisma.user.findUnique({
@@ -73,17 +74,17 @@ const handleUserSignUp = async (email: string, password: string, username: strin
 };
 
 const generateAccessToken = (user: User) => {
-  const payload: Token = {
+  const payload: TokenPayload = {
     type: TokenType.refreshToken,
-    user: excludeFromObject(user, ["passwordHash"]),
+    jwtUser: excludeFromObject(user, ["passwordHash"]),
   };
   return jwt.sign(payload, config.RSA_PRIVATE_KEY, { algorithm: "RS256", expiresIn: 60 * 60 });
 };
 
 const generateRefreshToken = (user: User) => {
-  const payload: Token = {
+  const payload: TokenPayload = {
     type: TokenType.refreshToken,
-    user: excludeFromObject(user, ["passwordHash"]),
+    jwtUser: excludeFromObject(user, ["passwordHash"]),
   };
   return jwt.sign(payload, config.RSA_PRIVATE_KEY, { algorithm: "RS256", expiresIn: 60 * 60 });
 };
@@ -115,4 +116,33 @@ const handleForgetPassword = async (email: string, username: string) => {
   return { maskedEmail: maskEmailAddress(user.email) };
 };
 
-export { handleUserSignIn, handleUserSignUp, findUserByEmail, findUserByUsername, handleForgetPassword };
+const exchangeAccessToken = async (grantType: string, refreshToken: string): Promise<string> => {
+  const payload = jwt.verify(refreshToken, config.RSA_PUBLIC_KEY, { algorithms: ["RS256"] });
+  const { type, jwtUser }: TokenPayload = JSON.parse(JSON.stringify(payload));
+
+  if (type == TokenType.accessToken)
+    throw createApiError(httpStatus.BAD_REQUEST, "Expected Refresh Token but received Access Token");
+
+  const user = await prisma.user.findUnique({
+    where: { email: jwtUser.email },
+  });
+
+  if (!user) {
+    throw createApiError(
+      httpStatus.UNAUTHORIZED,
+      "User's critical info is updated since the refresh token is issued. Please re-authenticate."
+    );
+  }
+
+  const accessToken = generateAccessToken(user);
+  return accessToken;
+};
+
+export {
+  handleUserSignIn,
+  handleUserSignUp,
+  findUserByEmail,
+  findUserByUsername,
+  handleForgetPassword,
+  exchangeAccessToken,
+};
