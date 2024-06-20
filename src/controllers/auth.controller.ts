@@ -10,6 +10,7 @@ import {
 import logger from "../utils/logger";
 import { NextFunction, Request, Response } from "express";
 import { excludeFromObject } from "../utils/object";
+import { sendToExchange } from "../lib/amqp";
 
 const signIn = async (req, res, next) => {
   try {
@@ -43,6 +44,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
       user,
       token,
     };
+    sendToExchange("exchange.mail", "user", user);
     res.status(httpStatus.OK).send(body);
   } catch (ex) {
     next(ex);

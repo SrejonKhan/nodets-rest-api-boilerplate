@@ -28,8 +28,10 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
     "@prisma/client": "^5.13.0",
+    "@types/amqplib": "^0.10.5",
     "@types/bcrypt": "^5.0.2",
     "@types/swagger-ui-express": "^4.1.6",
+    "amqplib": "^0.10.4",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
