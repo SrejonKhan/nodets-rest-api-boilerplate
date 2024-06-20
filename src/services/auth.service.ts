@@ -1,7 +1,7 @@
 import prisma from "../lib/prisma";
 import bcrypt from "bcrypt";
 import { createApiError } from "../utils/error";
-import config from "../config/base";
+import config from "../config/base.config";
 import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
 import { excludeFromObject } from "../utils/object";

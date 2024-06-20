@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { ApiError, createApiError } from "../utils/error";
-import config from "../config/base";
+import config from "../config/base.config";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@prisma/client/runtime/library";

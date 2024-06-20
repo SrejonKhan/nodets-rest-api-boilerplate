@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import httpStatus from "http-status";
-import config from "./config/base";
+import config from "./config/base.config";
 import logger from "./utils/logger";
 import morgan from "morgan";
 import { z } from "zod";

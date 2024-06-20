@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { createApiError } from "../utils/error";
 import jwt from "jsonwebtoken";
-import config from "../config/base";
+import config from "../config/base.config";
 import httpStatus from "http-status";
 
 const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {

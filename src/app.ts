@@ -1,4 +1,4 @@
-import config from "./config/base";
+import config from "./config/base.config";
 import { server } from "./server";
 import logger from "./utils/logger";
 
