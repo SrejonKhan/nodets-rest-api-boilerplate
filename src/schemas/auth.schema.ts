@@ -20,7 +20,7 @@ const signUpSchema = z
     description: "Email-Pass Signup payload Schema",
   });
 
-const forgetPasswordSchema = z
+const changePasswordSchema = z
   .object({
     email: z.string().email().optional(),
     username: z.string().min(3).optional(),
@@ -40,7 +40,7 @@ const forgetPasswordSchema = z
     )
   )
   .openapi({
-    description: "ForgetPassword payload Schema",
+    description: "ChangePassword payload Schema",
   });
 
 const refreshAccessTokenSchema = z
@@ -52,4 +52,4 @@ const refreshAccessTokenSchema = z
     description: "Token Refresh payload Schema",
   });
 
-export { signInSchema, signUpSchema, forgetPasswordSchema, refreshAccessTokenSchema };
+export { signInSchema, signUpSchema, changePasswordSchema, refreshAccessTokenSchema };

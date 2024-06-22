@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
-import { forgetPasswordSchema, refreshAccessTokenSchema, signInSchema, signUpSchema } from "../schemas/auth.schema";
+import { changePasswordSchema, refreshAccessTokenSchema, signInSchema, signUpSchema } from "../schemas/auth.schema";
 import {
   exchangeAccessToken,
   findUserByEmail,
-  handleForgetPassword,
+  handleChangePassword,
   handleUserSignIn,
   handleUserSignUp,
 } from "../services/auth.service";
@@ -65,17 +65,17 @@ const whoami = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const forgetPassword = async (req: Request, res: Response, next: NextFunction) => {
+const changePassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const payload = forgetPasswordSchema.parse(req.body);
+    const payload = changePasswordSchema.parse(req.body);
     const { email, username } = payload;
 
-    const { maskedEmail } = await handleForgetPassword(email, username);
+    const { maskedEmail } = await handleChangePassword(email, username);
 
-    logger.info(`Forget Password requrested for ${maskedEmail}.`);
+    logger.info(`Change Password requrested for ${maskedEmail}.`);
 
     const body = {
-      message: "Successfully sent Forget Password Link to registered email address.",
+      message: "Successfully sent Change Password Link to registered email address.",
       maskedEmail,
     };
 
@@ -103,4 +103,4 @@ const refreshAccessToken = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export { signIn, signUp, whoami, forgetPassword, refreshAccessToken };
+export { signIn, signUp, whoami, changePassword, refreshAccessToken };

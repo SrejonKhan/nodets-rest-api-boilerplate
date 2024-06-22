@@ -7,6 +7,7 @@ import { User } from "@prisma/client";
 import { excludeFromObject } from "../utils/object";
 import { maskEmailAddress } from "../utils/string";
 import httpStatus from "http-status";
+import { sendToExchange } from "../lib/amqp";
 
 const enum TokenType {
   refreshToken = "REFRESH_TOKEN",
@@ -106,7 +107,7 @@ const findUserByUsername = async (username: string) => {
   });
 };
 
-const handleForgetPassword = async (email: string, username: string) => {
+const handleChangePassword = async (email: string, username: string) => {
   const user = await prisma.user.findFirst({
     where: { OR: [{ email: email }, { username: username }] },
   });
@@ -115,8 +116,20 @@ const handleForgetPassword = async (email: string, username: string) => {
     throw new ApiError(400, "User doesn't exist with the provided email/username!");
   }
 
-  // send a mail to
-  user.email;
+  const jwtPayload = {
+    id: user.id,
+    email: user.email,
+  };
+
+  const changePassJwtToken = jwt.sign(jwtPayload, config.RSA_PRIVATE_KEY, { algorithm: "RS256", expiresIn: 60 * 15 });
+
+  const exchangeContent = {
+    email: user.email,
+    changePassJwtToken: changePassJwtToken,
+  };
+
+  // send a mail to the user
+  sendToExchange("exchange.mail", "change_pass", exchangeContent);
 
   return { maskedEmail: maskEmailAddress(user.email) };
 };
@@ -148,6 +161,6 @@ export {
   handleUserSignUp,
   findUserByEmail,
   findUserByUsername,
-  handleForgetPassword,
+  handleChangePassword,
   exchangeAccessToken,
 };
