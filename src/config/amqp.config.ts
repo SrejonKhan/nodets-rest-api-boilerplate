@@ -10,7 +10,7 @@ const exchanges: ExchangeConfig[] = [
 
 const queues: QueueConfig[] = [
   {
-    name: "queue.mail",
+    name: "queue.mail.user",
     options: {
       durable: false,
     },
@@ -20,7 +20,7 @@ const queues: QueueConfig[] = [
 const bindings: BindingConfig[] = [
   {
     exchangeName: "exchange.mail",
-    queueName: "queue.mail",
+    queueName: "queue.mail.user",
     bindingKey: "user",
   },
 ];
