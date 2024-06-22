@@ -7,11 +7,6 @@ interface JwtUser {
   role: User["role"];
 }
 
-enum TokenType {
-  refreshToken = "REFRESH_TOKEN",
-  accessToken = "ACCESS_TOKEN",
-}
-
 interface TokenPayload {
   type: TokenType;
   jwtUser: JwtUser;

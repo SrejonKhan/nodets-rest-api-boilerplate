@@ -8,6 +8,11 @@ import { excludeFromObject } from "../utils/object";
 import { maskEmailAddress } from "../utils/string";
 import httpStatus from "http-status";
 
+const enum TokenType {
+  refreshToken = "REFRESH_TOKEN",
+  accessToken = "ACCESS_TOKEN",
+}
+
 const handleUserSignIn = async (email: string, password: string) => {
   const user = await prisma.user.findUnique({
     where: { email: email },
