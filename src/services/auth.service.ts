@@ -1,6 +1,6 @@
 import prisma from "../lib/prisma";
 import bcrypt from "bcrypt";
-import { createApiError } from "../utils/error";
+import { ApiError } from "../utils/error";
 import config from "../config/base.config";
 import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
@@ -14,11 +14,11 @@ const handleUserSignIn = async (email: string, password: string) => {
   });
 
   if (!user) {
-    throw createApiError(401, "User not found!");
+    throw new ApiError(401, "User not found!");
   }
 
   if (!(await bcrypt.compare(password, user.passwordHash))) {
-    throw createApiError(401, "Invalid Password!");
+    throw new ApiError(401, "Invalid Password!");
   }
 
   const accessToken = generateAccessToken(user);
@@ -39,7 +39,7 @@ const handleUserSignUp = async (email: string, password: string, username: strin
   });
 
   if (userWithEmail) {
-    throw createApiError(400, "User with same email already exist!");
+    throw new ApiError(400, "User with same email already exist!");
   }
 
   const userWithUsername = await prisma.user.findUnique({
@@ -47,7 +47,7 @@ const handleUserSignUp = async (email: string, password: string, username: strin
   });
 
   if (userWithUsername) {
-    throw createApiError(400, "User with same username already exist!");
+    throw new ApiError(400, "User with same username already exist!");
   }
 
   const passwordHash = await bcrypt.hash(password, config.BCRYPT_SALT_ROUNDS);
@@ -107,7 +107,7 @@ const handleForgetPassword = async (email: string, username: string) => {
   });
 
   if (!user) {
-    throw createApiError(400, "User doesn't exist with the provided email/username!");
+    throw new ApiError(400, "User doesn't exist with the provided email/username!");
   }
 
   // send a mail to
@@ -121,14 +121,14 @@ const exchangeAccessToken = async (grantType: string, refreshToken: string): Pro
   const { type, jwtUser }: TokenPayload = JSON.parse(JSON.stringify(payload));
 
   if (type == TokenType.accessToken)
-    throw createApiError(httpStatus.BAD_REQUEST, "Expected Refresh Token but received Access Token");
+    throw new ApiError(httpStatus.BAD_REQUEST, "Expected Refresh Token but received Access Token");
 
   const user = await prisma.user.findUnique({
     where: { email: jwtUser.email },
   });
 
   if (!user) {
-    throw createApiError(
+    throw new ApiError(
       httpStatus.UNAUTHORIZED,
       "User's critical info is updated since the refresh token is issued. Please re-authenticate."
     );
