@@ -1,9 +1,16 @@
 import httpStatus from "http-status";
-import { changePasswordSchema, refreshAccessTokenSchema, signInSchema, signUpSchema } from "../schemas/auth.schema";
+import {
+  changePasswordSchema,
+  redeemChangePasswordSchema,
+  refreshAccessTokenSchema,
+  signInSchema,
+  signUpSchema,
+} from "../schemas/auth.schema";
 import {
   exchangeAccessToken,
   findUserByEmail,
   handleChangePassword,
+  handleRedeemChangePassword,
   handleUserSignIn,
   handleUserSignUp,
 } from "../services/auth.service";
@@ -70,13 +77,32 @@ const changePassword = async (req: Request, res: Response, next: NextFunction) =
     const payload = changePasswordSchema.parse(req.body);
     const { email, username } = payload;
 
-    const { maskedEmail } = await handleChangePassword(email, username);
+    const { maskedEmail } = await handleChangePassword(email, username, req.ip);
 
-    logger.info(`Change Password requrested for ${maskedEmail}.`);
+    logger.info(`Change Password requested for ${maskedEmail}.`);
 
     const body = {
       message: "Successfully sent Change Password Link to registered email address.",
       maskedEmail,
+    };
+
+    res.status(httpStatus.OK).send(body);
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+const redeemChangePassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const payload = redeemChangePasswordSchema.parse(req.body);
+    const { token, password } = payload;
+
+    const { maskedEmail } = await handleRedeemChangePassword(token, password, req.ip);
+
+    logger.info(`Change Password redeemed for ${maskedEmail}.`);
+
+    const body = {
+      message: "Successfully Changed Password.",
     };
 
     res.status(httpStatus.OK).send(body);
@@ -103,4 +129,4 @@ const refreshAccessToken = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export { signIn, signUp, whoami, changePassword, refreshAccessToken };
+export { signIn, signUp, whoami, changePassword, redeemChangePassword, refreshAccessToken };

@@ -43,6 +43,17 @@ const changePasswordSchema = z
     description: "ChangePassword payload Schema",
   });
 
+const redeemChangePasswordSchema = z
+  .object({
+    token: z.string(),
+    password: z.string().min(6, {
+      message: "Password must be at least 6 characters",
+    }),
+  })
+  .openapi({
+    description: "ChangePassword token redeem payload Schema",
+  });
+
 const refreshAccessTokenSchema = z
   .object({
     grantType: z.enum(["refresh_token"]),
@@ -52,4 +63,4 @@ const refreshAccessTokenSchema = z
     description: "Token Refresh payload Schema",
   });
 
-export { signInSchema, signUpSchema, changePasswordSchema, refreshAccessTokenSchema };
+export { signInSchema, signUpSchema, changePasswordSchema, redeemChangePasswordSchema, refreshAccessTokenSchema };

@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id             Int             @id @default(autoincrement())
-  createdAt      DateTime        @default(now())
-  email          String          @unique
-  username       String          @unique
-  displayName    String?
-  passwordHash   String
-  role           Role            @default(USER)
-  userProfile    UserProfile?
-  clubMemberInfo ClubMemberInfo?
+  id                     Int                     @id @default(autoincrement())
+  createdAt              DateTime                @default(now())
+  email                  String                  @unique
+  username               String                  @unique
+  displayName            String?
+  passwordHash           String
+  role                   Role                    @default(USER)
+  userProfile            UserProfile?
+  clubMemberInfo         ClubMemberInfo?
+  changePasswordRequests ChangePasswordRequest[]
 }
 
 enum Role {
@@ -86,4 +87,12 @@ enum MemberRole {
   ASSISTANT_TREASURER
   EXECUTIVE_MEMBER
   MEMBER
+}
+
+model ChangePasswordRequest {
+  token        String   @unique
+  reqIpAddress String
+  requestedAt  DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int      @unique
 }

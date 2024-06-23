@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { forgetPasswordSchema, refreshAccessTokenSchema, signInSchema, signUpSchema } from "../../src/schemas/auth.schema";
+import {
+  refreshAccessTokenSchema,
+  signInSchema,
+  signUpSchema,
+  changePasswordSchema,
+  redeemChangePasswordSchema,
+} from "../../src/schemas/auth.schema";
 import { bearerAuth, registry } from "./generator";
 
 registry.registerPath({
@@ -104,6 +110,53 @@ registry.registerPath({
   responses: {
     200: {
       description: "Object with a message and new access token.",
+    },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/auth/change-password",
+  summary: "Request a change password.",
+  description: `A change password email will be sent to the registered email address of user, proper security added to prevent spamming.`,
+  security: [],
+  tags: ["Authentication"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            email: z.string().email(),
+            username: z.string().min(3),
+          }),
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Object with a message and masked email address.",
+    },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/auth/redeem-change-password",
+  summary: "Redeem change password token.",
+  description: `User password will be updated to the provided password if token is valid and never redeemed before.`,
+  security: [],
+  tags: ["Authentication"],
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: redeemChangePasswordSchema },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Object with a message.",
     },
   },
 });

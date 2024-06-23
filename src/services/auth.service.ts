@@ -8,6 +8,7 @@ import { excludeFromObject } from "../utils/object";
 import { maskEmailAddress } from "../utils/string";
 import httpStatus from "http-status";
 import { sendToExchange } from "../lib/amqp";
+import { randomBytes } from "crypto";
 
 const enum TokenType {
   refreshToken = "REFRESH_TOKEN",
@@ -107,7 +108,7 @@ const findUserByUsername = async (username: string) => {
   });
 };
 
-const handleChangePassword = async (email: string, username: string) => {
+const handleChangePassword = async (email: string, username: string, ipAddress: string) => {
   const user = await prisma.user.findFirst({
     where: { OR: [{ email: email }, { username: username }] },
   });
@@ -116,22 +117,88 @@ const handleChangePassword = async (email: string, username: string) => {
     throw new ApiError(400, "User doesn't exist with the provided email/username!");
   }
 
-  const jwtPayload = {
-    id: user.id,
-    email: user.email,
-  };
+  // make sure that no one is spamming or requesting too many change pass req.
+  const tokens = await prisma.changePasswordRequest.findMany({
+    where: {
+      AND: [{ userId: user.id }],
+    },
+  });
 
-  const changePassJwtToken = jwt.sign(jwtPayload, config.RSA_PRIVATE_KEY, { algorithm: "RS256", expiresIn: 60 * 15 });
+  const currentTime = new Date().getTime();
+  const FIFTEEN_MINS = 15 * 60 * 1000; /* ms */
+  for (const token of tokens) {
+    if (currentTime - token.requestedAt.getTime() < FIFTEEN_MINS) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "A change password is requested just a while ago and never redeemed. Wait for a moment before requesting again."
+      );
+    }
+  }
 
+  // create token
+  const changePassToken = randomBytes(32).toString("hex");
+
+  await prisma.changePasswordRequest.create({
+    data: {
+      reqIpAddress: ipAddress,
+      token: changePassToken,
+      userId: user.id,
+    },
+  });
+
+  // send to exchange
   const exchangeContent = {
     email: user.email,
-    changePassJwtToken: changePassJwtToken,
+    changePassJwtToken: changePassToken,
+    reqTime: Date.now(),
+    reqIpAddress: ipAddress,
   };
 
-  // send a mail to the user
   sendToExchange("exchange.mail", "change_pass", exchangeContent);
 
   return { maskedEmail: maskEmailAddress(user.email) };
+};
+
+const handleRedeemChangePassword = async (token: string, password: string, ipAddress: string) => {
+  const changePassReq = await prisma.changePasswordRequest.findUnique({
+    where: { token: token },
+    include: {
+      user: true,
+    },
+  });
+
+  if (!changePassReq) {
+    throw new ApiError(400, "No Change Password Request exist with the following token!");
+  }
+
+  const passwordHash = await bcrypt.hash(password, config.BCRYPT_SALT_ROUNDS);
+
+  // update
+  await prisma.user.update({
+    where: {
+      email: changePassReq.user.email,
+    },
+    data: {
+      passwordHash: passwordHash,
+    },
+  });
+
+  await prisma.changePasswordRequest.delete({
+    where: {
+      token: token,
+    },
+  });
+
+  const exchangeContent = {
+    email: changePassReq.user.email,
+    redeemTime: Date.now(),
+    redeemIpAddress: ipAddress,
+  };
+
+  // send a confirmation mail to the user
+  sendToExchange("exchange.mail", "change_pass_confirmation", exchangeContent);
+
+  return { maskedEmail: maskEmailAddress(changePassReq.user.email) };
 };
 
 const exchangeAccessToken = async (grantType: string, refreshToken: string): Promise<string> => {
@@ -162,5 +229,6 @@ export {
   findUserByEmail,
   findUserByUsername,
   handleChangePassword,
+  handleRedeemChangePassword,
   exchangeAccessToken,
 };

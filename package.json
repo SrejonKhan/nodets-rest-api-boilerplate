@@ -5,12 +5,13 @@
   "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run db-push && concurrently -r \"npm run prisma-studio\" \"ts-node-dev --respawn --transpile-only src/app.ts\"",
+    "dev": "npm run prisma-generate && npm run db-push && concurrently -r \"npm run prisma-studio\" \"ts-node-dev --respawn --transpile-only src/app.ts\"",
     "build": "tsc -p tsconfig.json",
     "generate-swagger": "ts-node-dev docs/api/generator.ts",
     "generate-swagger:docker": "env SERVICE_HOST=http://localhost:2222 npm run generate-swagger",
     "db-push": "prisma db push",
     "prisma-studio": "prisma studio",
+    "prisma-generate": "prisma generate",
     "docker:dev": "npm run generate-swagger:docker && docker compose -f ./docker/compose.dev.yml down && docker compose -f ./docker/compose.dev.yml up --no-attach swagger-ui"
   },
   "author": "BAIUST Computer Club",

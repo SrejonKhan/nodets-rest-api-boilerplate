@@ -23,6 +23,16 @@ const bindings: BindingConfig[] = [
     queueName: "queue.mail.user",
     bindingKey: "user",
   },
+  {
+    exchangeName: "exchange.mail",
+    queueName: "queue.mail.user",
+    bindingKey: "change_pass",
+  },
+  {
+    exchangeName: "exchange.mail",
+    queueName: "queue.mail.user",
+    bindingKey: "change_pass_confirmation",
+  },
 ];
 
 const amqpConfig = {
