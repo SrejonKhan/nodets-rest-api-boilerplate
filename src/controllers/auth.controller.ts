@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import {
   changePasswordSchema,
+  googleOAuth2SignInSchema,
   redeemChangePasswordSchema,
   refreshAccessTokenSchema,
   signInSchema,
@@ -10,6 +11,7 @@ import {
   exchangeAccessToken,
   findUserByEmail,
   handleChangePassword,
+  handleGoogleSignIn,
   handleRedeemChangePassword,
   handleUserSignIn,
   handleUserSignUp,
@@ -129,4 +131,22 @@ const refreshAccessToken = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export { signIn, signUp, whoami, changePassword, redeemChangePassword, refreshAccessToken };
+const googleOAuth2SignIn = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const payload = googleOAuth2SignInSchema.parse(req.body);
+    const { code } = payload;
+
+    const { user, token } = await handleGoogleSignIn(code.trim());
+
+    const body = {
+      message: "Successfully signed up using Google!",
+      user,
+      token,
+    };
+    res.status(httpStatus.OK).send(body);
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+export { signIn, signUp, whoami, changePassword, redeemChangePassword, refreshAccessToken, googleOAuth2SignIn };

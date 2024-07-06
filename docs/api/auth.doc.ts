@@ -5,6 +5,7 @@ import {
   signUpSchema,
   changePasswordSchema,
   redeemChangePasswordSchema,
+  googleOAuth2SignInSchema,
 } from "../../src/schemas/auth.schema";
 import { bearerAuth, registry } from "./generator";
 
@@ -157,6 +158,27 @@ registry.registerPath({
   responses: {
     200: {
       description: "Object with a message.",
+    },
+  },
+});
+
+registry.registerPath({
+  method: "post",
+  path: "/auth/google-signin",
+  summary: "Google OAuth2 SignIn.",
+  description: `Sign in with Google OAuth2 Code.`,
+  security: [],
+  tags: ["Authentication"],
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: googleOAuth2SignInSchema },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Object with the user profile.",
     },
   },
 });

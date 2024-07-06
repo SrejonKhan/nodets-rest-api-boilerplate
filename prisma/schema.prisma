@@ -21,6 +21,7 @@ model User {
   displayName            String?
   passwordHash           String
   role                   Role                    @default(USER)
+  authType               AuthType                @default(EMAILPASS)
   userProfile            UserProfile?
   clubMemberInfo         ClubMemberInfo?
   changePasswordRequests ChangePasswordRequest[]
@@ -31,6 +32,11 @@ enum Role {
   ADMIN
   FACULTY
   MEMBER
+}
+
+enum AuthType {
+  EMAILPASS
+  OAUTH
 }
 
 model UserProfile {

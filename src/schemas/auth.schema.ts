@@ -63,4 +63,19 @@ const refreshAccessTokenSchema = z
     description: "Token Refresh payload Schema",
   });
 
-export { signInSchema, signUpSchema, changePasswordSchema, redeemChangePasswordSchema, refreshAccessTokenSchema };
+const googleOAuth2SignInSchema = z
+  .object({
+    code: z.string(),
+  })
+  .openapi({
+    description: "Google OAuth2 SignIn Schema.",
+  });
+
+export {
+  signInSchema,
+  signUpSchema,
+  changePasswordSchema,
+  redeemChangePasswordSchema,
+  refreshAccessTokenSchema,
+  googleOAuth2SignInSchema,
+};

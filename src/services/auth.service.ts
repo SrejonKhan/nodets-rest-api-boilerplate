@@ -5,10 +5,13 @@ import config from "../config/base.config";
 import jwt from "jsonwebtoken";
 import { User } from "@prisma/client";
 import { excludeFromObject } from "../utils/object";
-import { maskEmailAddress } from "../utils/string";
+import { generateUserNameFromEmail, maskEmailAddress } from "../utils/string";
 import httpStatus from "http-status";
 import { sendToExchange } from "../lib/amqp";
 import { randomBytes } from "crypto";
+import logger from "../utils/logger";
+import axios from "axios";
+import { oauth2Client } from "../lib/google";
 
 const enum TokenType {
   refreshToken = "REFRESH_TOKEN",
@@ -223,6 +226,54 @@ const exchangeAccessToken = async (grantType: string, refreshToken: string): Pro
   return accessToken;
 };
 
+const handleGoogleSignIn = async (code: string) => {
+  const { tokens } = await oauth2Client.getToken(code);
+
+  const userResponse = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+    headers: {
+      Authorization: `Bearer ${tokens.access_token}`,
+    },
+  });
+
+  const googleUserData: {
+    email: string;
+    email_verified: boolean;
+    family_name: string;
+    given_name: string;
+    name: string;
+    picture: string;
+    sub: string;
+  } = userResponse.data;
+
+  let user = await prisma.user.findUnique({
+    where: { email: googleUserData.email },
+  });
+
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        email: googleUserData.email,
+        username: generateUserNameFromEmail(googleUserData.email),
+        displayName: googleUserData.name,
+        passwordHash: "",
+        authType: "OAUTH",
+      },
+    });
+    logger.info(`New user created using Google OAuth. UserID: ${user.id}.`);
+  }
+
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
+
+  return {
+    user: excludeFromObject(user, ["passwordHash"]),
+    token: {
+      accessToken,
+      refreshToken,
+    },
+  };
+};
+
 export {
   handleUserSignIn,
   handleUserSignUp,
@@ -231,4 +282,5 @@ export {
   handleChangePassword,
   handleRedeemChangePassword,
   exchangeAccessToken,
+  handleGoogleSignIn,
 };

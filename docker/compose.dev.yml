@@ -14,9 +14,6 @@ services:
     volumes:
       - ..:/home/node/app
       - /home/node/app/node_modules
-      - /home/node/app/prisma
-      - /home/node/app/docker
-      - /home/node/app/docs
     links:
       - postgres
     depends_on:
