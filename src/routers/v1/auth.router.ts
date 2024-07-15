@@ -8,13 +8,14 @@ import {
   signUp,
   whoami,
 } from "../../controllers/auth.controller";
-import { isAuthenticated } from "../../middlewares/auth.middleware";
+import { hasRole, requireAuth } from "../../middlewares/auth.middleware";
+import { Role } from "@prisma/client";
 
 const authRouter = express.Router();
 
 authRouter.post("/signin", signIn);
 authRouter.post("/signup", signUp);
-authRouter.get("/whoami", isAuthenticated, whoami);
+authRouter.get("/whoami", hasRole(["*"]), whoami);
 authRouter.post("/change-password", changePassword);
 authRouter.post("/redeem-change-password", redeemChangePassword);
 authRouter.post("/refresh", refreshAccessToken);
