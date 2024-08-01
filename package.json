@@ -12,6 +12,7 @@
   },
   "scripts": {
     "test": "jest",
+    "dev:nodets": "ts-node-dev --respawn --transpile-only src/app.ts",
     "dev": "npm run prisma-generate && npm run db-push && concurrently -r \"npm run prisma-studio\" \"ts-node-dev --respawn --transpile-only src/app.ts\"",
     "build": "tsc -p tsconfig.json",
     "generate-swagger": "ts-node-dev docs/api/generator.ts",
