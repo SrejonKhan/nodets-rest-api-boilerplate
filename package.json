@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "description": "server side of bcc web",
   "main": "app.ts",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./tests/setup.ts"
+    ]
+  },
   "scripts": {
     "test": "jest",
     "dev": "npm run prisma-generate && npm run db-push && concurrently -r \"npm run prisma-studio\" \"ts-node-dev --respawn --transpile-only src/app.ts\"",
@@ -24,6 +31,7 @@
     "concurrently": "^8.2.2",
     "jest": "^29.7.0",
     "prisma": "^5.13.0",
+    "supertest": "^7.0.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
