@@ -1,4 +1,5 @@
-import "dotenv/config";
+import { config as dotenvConfig } from "dotenv";
+dotenvConfig({ path: `.env.${process.env.NODE_ENV}` });
 
 const config = {
   ENV: process.env.NODE_ENV,
