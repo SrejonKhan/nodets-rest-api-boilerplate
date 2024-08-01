@@ -1,3 +1,24 @@
+# NodeTs Rest API Boilerplate
+
+A REST API based Backend (ExpressJs) Boilerplate. Suitable for both Monolith and Microservice application. It utilizes Asymmetric JWT Authentication, that is suitable for any cases (condition applies).
+
+The Readme isn't complete properly, yet. There are some works need to be polished, specially documention and some scripts to automate the process of bootstrapping. If you are too tech savvy to deep dive into a codebase of stranger, you are good to go for now, haha.
+
+Features or Technologies, whatever you say:
+
+- NodeTs
+- Express
+- PrismaORM
+- SQL
+- Zod Schema
+- RabbitMQ
+- Logger (Winston)
+- Logstash Support (Elastic Stack not implemented)
+- Swagger Docs (Auto Generation)
+- Docker, Docker Compose
+- CI/CD (Upcoming)
+- You are not stricted with non-sense styling rules, uses Prettier.
+
 ## Services
 
 Available service(s) when ran with `npm run docker:dev`:
