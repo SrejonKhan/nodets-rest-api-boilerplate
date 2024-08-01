@@ -27,7 +27,7 @@ if (config.ENV === "development") {
 server.use("/api/v1/auth", authRouter);
 server.use("/docs", docsRouter);
 server.get("/", (req, res) => {
-  return res.status(httpStatus.OK).send({ message: "BCC Server is running successfully!" });
+  return res.status(httpStatus.OK).send({ message: "The Server is running successfully!" });
 });
 
 /*-------------------ERROR HANDLING-------------------*/
