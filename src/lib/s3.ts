@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client } from "@aws-sdk/client-s3";
 import config from "../config/base.config";
 
 const s3Client = new S3Client({
@@ -11,4 +11,4 @@ const s3Client = new S3Client({
   },
 });
 
-export { s3Client, PutObjectCommand, DeleteObjectCommand };
+export { s3Client };
