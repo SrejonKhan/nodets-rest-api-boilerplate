@@ -1,5 +1,6 @@
 import amqp from "amqplib";
 import config from "../config/base.config";
+import { BindingConfig, ExchangeConfig, QueueConfig } from "../interfaces/amqp.interface";
 
 const getConnection = (function () {
   let connection: amqp.Connection;

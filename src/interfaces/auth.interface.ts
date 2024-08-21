@@ -1,5 +1,12 @@
+import { User } from "@prisma/client";
+
+export enum TokenType {
+  refreshToken = "REFRESH_TOKEN",
+  accessToken = "ACCESS_TOKEN",
+}
+
 // slimmest version of User type for JWT Payload
-interface JwtUser {
+export interface JwtUser {
   id: User["id"];
   email: User["email"];
   username: User["username"];
@@ -7,7 +14,7 @@ interface JwtUser {
   role: User["role"];
 }
 
-interface TokenPayload {
+export interface TokenPayload {
   type: TokenType;
   jwtUser: JwtUser;
 }

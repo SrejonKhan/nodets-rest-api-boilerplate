@@ -1,3 +1,5 @@
+import { BindingConfig, ExchangeConfig, QueueConfig } from "../interfaces/amqp.interface";
+
 const exchanges: ExchangeConfig[] = [
   {
     name: "exchange.mail",

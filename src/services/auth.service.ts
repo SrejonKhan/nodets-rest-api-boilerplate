@@ -12,11 +12,7 @@ import { randomBytes } from "crypto";
 import logger from "../utils/logger";
 import axios from "axios";
 import { oauth2Client } from "../lib/google";
-
-const enum TokenType {
-  refreshToken = "REFRESH_TOKEN",
-  accessToken = "ACCESS_TOKEN",
-}
+import { TokenPayload, TokenType } from "../interfaces/auth.interface";
 
 const handleUserSignIn = async (email: string, password: string) => {
   const user = await prisma.user.findUnique({

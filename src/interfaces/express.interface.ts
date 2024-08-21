@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { JwtUser } from "./auth.interface";
 
 declare global {
   namespace Express {
